@@ -1,0 +1,12 @@
+{
+    "example": {
+        "one": 1,
+        "two": 2,
+        "three": 3
+    },
+    "has": {
+        "a": {
+            "list": ["first-array-item", "second"]
+        }
+    }
+}
