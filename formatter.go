@@ -16,11 +16,11 @@ func (f *defaultFormatter) FormatString(s string) string {
 	b, _ := json.Marshal(s)
 	s = string(b)
 	s = s[1 : len(s)-1]
-	return " " + s
+	return s
 }
 
 func (f *defaultFormatter) FormatNumber(n json.Number) string {
-	return "" + string(n)
+	return string(n)
 }
 
 func (f *defaultFormatter) FormatNull() string {
@@ -46,7 +46,7 @@ func (f *defaultFormatter) FormatStatement(key string, value string) string {
 	if key == "" {
 		return value
 	}
-	return fmt.Sprintf("%s:%s", key, value)
+	return fmt.Sprintf("%s: %s", key, value)
 }
 
 func (f *defaultFormatter) FormatEmptyObject() string {
@@ -55,4 +55,36 @@ func (f *defaultFormatter) FormatEmptyObject() string {
 
 func (f *defaultFormatter) FormatEmptyArray() string {
 	return "[]"
+}
+
+type originalGronFormatter struct {
+	defaultFormatter
+}
+
+func NewOriginalGronFormatter() Formatter {
+	return &originalGronFormatter{}
+}
+
+func (f *originalGronFormatter) FormatString(s string) string {
+	b, _ := json.Marshal(s)
+	s = string(b)
+	return s
+}
+
+func (f *originalGronFormatter) FormatNumber(n json.Number) string {
+	return string(n)
+}
+
+func (f *originalGronFormatter) FormatObject(key string, isFirst bool) string {
+	if isFirst {
+		return key
+	}
+	return "." + key
+}
+
+func (f *originalGronFormatter) FormatStatement(key string, value string) string {
+	if key == "" {
+		return value
+	}
+	return fmt.Sprintf("%s: %s", key, value)
 }

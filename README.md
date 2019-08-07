@@ -1,6 +1,6 @@
 # gron
 
-A go library to make JSON greppable.
+A go library to make JSON greppable inspired by https://github.com/tomnomnom/gron
 
 gron transforms JSON into discrete assignments to make it easier to grep for what you want and see the absolute 'path' to it.
 
@@ -20,8 +20,9 @@ func main() {
     reader := bufio.NewReader(f)
 
     g := gron.New(reader)
+    // g := gron.New(reader, gron.OriginalGronFormatter())
 
-    out := g.String()
+    out, _ := g.String()
 
     fmt.Println(out)
 }

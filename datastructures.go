@@ -76,5 +76,5 @@ func (d *doc) SetKey(key string) {
 }
 
 func (d *doc) String() string {
-	return d.formatter.FormatObject(d.key, false)
+	return d.formatter.FormatObject(d.key, d.root)
 }

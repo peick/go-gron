@@ -12,9 +12,9 @@ func TestStringArray(t *testing.T) {
 		input  string
 		expect []string
 	}{
-		{`""`, []string{" "}},
+		{`""`, []string{""}},
 
-		{`"sample"`, []string{" sample"}},
+		{`"sample"`, []string{"sample"}},
 
 		{`null`, []string{"null"}},
 
@@ -26,25 +26,25 @@ func TestStringArray(t *testing.T) {
 
 		{`{}`, []string{"{}"}},
 
-		{`{"": 1}`, []string{".:1"}},
+		{`{"": 1}`, []string{".: 1"}},
 
 		{`{"": ""}`, []string{".: "}},
 
 		{`{"sample": "example"}`, []string{".sample: example"}},
 
-		{`{"sample": null}`, []string{".sample:null"}},
+		{`{"sample": null}`, []string{".sample: null"}},
 
 		{`{"sample": "null"}`, []string{".sample: null"}},
 
-		{`{"sample": 42}`, []string{".sample:42"}},
+		{`{"sample": 42}`, []string{".sample: 42"}},
 
 		{`{"sample": "42"}`, []string{".sample: 42"}},
 
-		{`{"sample": 4.21}`, []string{".sample:4.21"}},
+		{`{"sample": 4.21}`, []string{".sample: 4.21"}},
 
 		{`{"sample": "4.21"}`, []string{".sample: 4.21"}},
 
-		{`{"sample": true}`, []string{".sample:true"}},
+		{`{"sample": true}`, []string{".sample: true"}},
 
 		{`{"sample": "true"}`, []string{".sample: true"}},
 
@@ -53,23 +53,23 @@ func TestStringArray(t *testing.T) {
 		{`{"key1": {"sub1": "sub-value1", "sub2": "sub-value2"}, "key2": "value2"}`,
 			[]string{".key1.sub1: sub-value1", ".key1.sub2: sub-value2", ".key2: value2"}},
 
-		{`{"key1": [], "key2": 42}`, []string{".key1:[]", ".key2:42"}},
+		{`{"key1": [], "key2": 42}`, []string{".key1: []", ".key2: 42"}},
 
-		{`{"key1": {}, "key2": 42}`, []string{".key1:{}", ".key2:42"}},
+		{`{"key1": {}, "key2": 42}`, []string{".key1: {}", ".key2: 42"}},
 
 		{`{"sample": "Lorem\nipsum\ndolor"}`, []string{`.sample: Lorem\nipsum\ndolor`}},
 
-		{`{"sample": {}}`, []string{".sample:{}"}},
+		{`{"sample": {}}`, []string{".sample: {}"}},
 
-		{`{"sample": []}`, []string{".sample:[]"}},
+		{`{"sample": []}`, []string{".sample: []"}},
 
 		{`[]`, []string{"[]"}},
 
-		{`[1]`, []string{"[0]:1"}},
+		{`[1]`, []string{"[0]: 1"}},
 
-		{`[[]]`, []string{"[0]:[]"}},
+		{`[[]]`, []string{"[0]: []"}},
 
-		{`[{}]`, []string{"[0]:{}"}},
+		{`[{}]`, []string{"[0]: {}"}},
 	}
 
 	for _, tt := range testCases {

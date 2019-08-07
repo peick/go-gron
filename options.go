@@ -7,3 +7,9 @@ func DefaultFormatter() Option {
 		gr.formatter = NewDefaultFormatter()
 	}
 }
+
+func OriginalGronFormatter() Option {
+	return func(gr *gronImpl) {
+		gr.formatter = NewOriginalGronFormatter()
+	}
+}

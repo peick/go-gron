@@ -20,7 +20,7 @@ func main() {
 
 	reader := bufio.NewReader(f)
 
-	g := gron.New(reader)
+	g := gron.New(reader, gron.OriginalGronFormatter())
 
 	out, err := g.String()
 	check(err)
