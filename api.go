@@ -14,6 +14,10 @@ type Gron interface {
 	StatementArray() ([]Statement, error)
 }
 
+func NewFromMarshalable(v interface{}, options ...Option) (Gron, error) {
+	return newGronImplFromMarshal(v, options...)
+}
+
 func New(reader io.Reader, options ...Option) Gron {
 	return newGronImpl(reader, options...)
 }

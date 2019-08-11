@@ -82,3 +82,57 @@ func TestStringArray(t *testing.T) {
 		})
 	}
 }
+
+func TestNewFromMarshalable(t *testing.T) {
+	type sampleStruct struct {
+		A int
+		B string `json:"b"`
+	}
+
+	testCases := []struct {
+		name   string
+		input  interface{}
+		expect []string
+	}{
+		{"struct",
+			sampleStruct{43, "test"},
+			[]string{".A: 43", ".b: test"},
+		},
+
+		{"map",
+			map[string]interface{}{"A": 43, "b": "test"},
+			[]string{".A: 43", ".b: test"},
+		},
+
+		{"string",
+			"test",
+			[]string{"test"},
+		},
+
+		{"int",
+			44,
+			[]string{"44"},
+		},
+
+		{"array",
+			[]interface{}{45, "test"},
+			[]string{"[0]: 45", "[1]: test"},
+		},
+
+		{"nil",
+			nil,
+			[]string{"null"},
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			gr, err := NewFromMarshalable(tt.input)
+			require.NoError(t, err)
+			require.NotNil(t, gr)
+			res, err := gr.StringArray()
+			require.NoError(t, err)
+			require.Equal(t, tt.expect, res)
+		})
+	}
+}

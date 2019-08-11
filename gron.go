@@ -1,6 +1,7 @@
 package gron
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -37,6 +38,30 @@ func newGronImpl(reader io.Reader, options ...Option) *gronImpl {
 	}
 
 	return &inst
+}
+
+func newGronImplFromMarshal(v interface{}, options ...Option) (*gronImpl, error) {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return nil, err
+	}
+
+	reader := bytes.NewReader(b)
+	inst := newGronImpl(reader, options...)
+
+	return inst, nil
+}
+
+func newGronImplFromMap(m map[string]interface{}, options ...Option) (*gronImpl, error) {
+	b, err := json.Marshal(m)
+	if err != nil {
+		return nil, err
+	}
+
+	reader := bytes.NewReader(b)
+	inst := newGronImpl(reader, options...)
+
+	return inst, nil
 }
 
 func (gr *gronImpl) NextStatement() (*Statement, error) {
