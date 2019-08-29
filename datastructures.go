@@ -3,13 +3,15 @@ package gron
 type Statement struct {
 	key       string
 	value     string
+	rawValue  interface{}
 	formatter Formatter
 }
 
-func newStatement(key, value string, formatter Formatter) *Statement {
+func newStatement(key, value string, rawValue interface{}, formatter Formatter) *Statement {
 	return &Statement{
 		key:       key,
 		value:     value,
+		rawValue:  rawValue,
 		formatter: formatter,
 	}
 }

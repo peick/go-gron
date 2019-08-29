@@ -189,7 +189,8 @@ func (gr *gronImpl) handleDocEnd() *Statement {
 	var s *Statement
 	if gr.stack.Peek().Empty() {
 		gr.stack.Pop()
-		s = newStatement(gr.stack.String(), gr.formatter.FormatEmptyObject(), gr.formatter)
+		emptyDoc := map[interface{}]interface{}{}
+		s = newStatement(gr.stack.String(), gr.formatter.FormatEmptyObject(), emptyDoc, gr.formatter)
 	} else {
 		gr.stack.Pop()
 	}
@@ -209,7 +210,8 @@ func (gr *gronImpl) handleArrayEnd() *Statement {
 		if !gr.stack.Empty() {
 			k = gr.stack.String()
 		}
-		s = newStatement(k, gr.formatter.FormatEmptyArray(), gr.formatter)
+		emptyArray := []interface{}{}
+		s = newStatement(k, gr.formatter.FormatEmptyArray(), emptyArray, gr.formatter)
 	} else {
 		gr.stack.Pop()
 	}
@@ -224,7 +226,7 @@ func (gr *gronImpl) handleArrayEnd() *Statement {
 func (gr *gronImpl) handlePrimitive(t interface{}) *Statement {
 	e := gr.stack.Peek()
 	if e == nil {
-		return newStatement("", gr.formatPrimitive(t), gr.formatter)
+		return newStatement("", gr.formatPrimitive(t), t, gr.formatter)
 	}
 
 	switch e.(type) {
@@ -251,7 +253,7 @@ func (gr *gronImpl) handlePrimitive(t interface{}) *Statement {
 }
 
 func (gr *gronImpl) buildStatement(t interface{}) *Statement {
-	return newStatement(gr.stack.String(), gr.formatPrimitive(t), gr.formatter)
+	return newStatement(gr.stack.String(), gr.formatPrimitive(t), t, gr.formatter)
 }
 
 func (gr *gronImpl) formatPrimitive(p interface{}) string {
@@ -267,4 +269,33 @@ func (gr *gronImpl) formatPrimitive(p interface{}) string {
 	default:
 		return fmt.Sprintf("<%s>", p)
 	}
+}
+
+func (gr *gronImpl) Map() (map[string]interface{}, error) {
+	result := make(map[string]interface{})
+
+	for {
+		s, err := gr.NextStatement()
+		if gr.eof {
+			return result, nil
+		}
+		if err != nil {
+			return result, err
+		}
+		result[s.key] = s.rawValue
+	}
+}
+
+func (gr *gronImpl) MarshalJSON() ([]byte, error) {
+	m, err := gr.Map()
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := json.Marshal(m)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }

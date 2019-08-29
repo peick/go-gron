@@ -1,6 +1,7 @@
 package gron
 
 import (
+	"encoding/json"
 	"strings"
 	"testing"
 
@@ -133,6 +134,36 @@ func TestNewFromMarshalable(t *testing.T) {
 			res, err := gr.StringArray()
 			require.NoError(t, err)
 			require.Equal(t, tt.expect, res)
+		})
+	}
+}
+
+func TestMap(t *testing.T) {
+	testCases := []struct {
+		name   string
+		input  interface{}
+		expect string
+	}{
+		{"flat-map",
+			map[string]interface{}{"a": "1", "b": 2},
+			`{".a":"1",".b":2}`,
+		},
+
+		{"nil",
+			nil,
+			`{"":null}`,
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			gr, err := NewFromMarshalable(tt.input)
+			require.NoError(t, err)
+			require.NotNil(t, gr)
+
+			b, err := json.Marshal(gr)
+			require.NoError(t, err)
+			require.Equal(t, tt.expect, string(b))
 		})
 	}
 }
