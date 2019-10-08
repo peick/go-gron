@@ -292,6 +292,16 @@ func (gr *gronImpl) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 
+	// work-around when the value is the empty map
+	for k, v := range m {
+		d, ok := v.(map[interface{}]interface{})
+		if ok {
+			if len(d) == 0 {
+				m[k] = nil
+			}
+		}
+	}
+
 	b, err := json.Marshal(m)
 	if err != nil {
 		return nil, err

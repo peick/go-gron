@@ -80,6 +80,33 @@ func TestStringArray(t *testing.T) {
 			res, err := gr.StringArray()
 			require.NoError(t, err)
 			require.Equal(t, tt.expect, res)
+
+			// test json.Marshal
+			reader = strings.NewReader(tt.input)
+			gr = New(reader)
+			_, err = json.Marshal(gr)
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestMarshalJSON(t *testing.T) {
+	testCases := []struct {
+		input  string
+		expect string
+	}{
+		{`null`, `{"":null}`},
+		{`{}`, `{"":null}`},
+		{`{"sample": {}}`, `{".sample":null}`},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.input, func(t *testing.T) {
+			reader := strings.NewReader(tt.input)
+			gr := New(reader)
+			res, err := json.Marshal(gr)
+			require.NoError(t, err)
+			require.Equal(t, tt.expect, string(res))
 		})
 	}
 }
